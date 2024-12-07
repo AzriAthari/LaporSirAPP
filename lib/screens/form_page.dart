@@ -48,7 +48,26 @@ class _FormPageState extends State<FormPage> {
     }
   }
 
+  // Fungsi untuk memvalidasi form
+  bool _validateForm() {
+    if (_titleController.text.isEmpty ||
+        _locationController.text.isEmpty ||
+        _complaintController.text.isEmpty ||
+        _imagePath == null) {
+      return false;
+    }
+    return true;
+  }
+
   Future<void> saveReport() async {
+    if (!_validateForm()) {
+      // Jika ada field yang kosong, tampilkan pesan kesalahan
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Harap isi semua kolom dan pilih foto.')),
+      );
+      return;
+    }
+
     final prefs = await SharedPreferences.getInstance();
     List<String> reports = prefs.getStringList('reports') ?? [];
 
